@@ -1,6 +1,6 @@
-// app/not-found.tsx
+import NoteForm from "@/components/NoteForm/NoteForm";
+import css from "./CreateNote.module.css";
 import type { Metadata } from "next";
-import css from "./page.module.css";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -23,15 +23,15 @@ export const metadata: Metadata = {
   },
 };
 
-const NotFound = () => {
+function CreateNote() {
   return (
-    <>
-      <h1 className={css.title}>404 - Page not found</h1>
-      <p className={css.description}>
-        Sorry, the page you are looking for does not exist.
-      </p>
-    </>
+    <main className={css.main}>
+      <div className={css.container}>
+        <h1 className={css.title}>Create note</h1>
+        <NoteForm />
+      </div>
+    </main>
   );
-};
+}
 
-export default NotFound;
+export default CreateNote;
