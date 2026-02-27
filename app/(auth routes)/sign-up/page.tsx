@@ -2,7 +2,6 @@
 
 import css from "./SignUpPage.module.css";
 import { useState } from "react";
-import { ApiError } from "@/app/api/api";
 import { register } from "@/lib/api/clientApi";
 import { RegisterRequest } from "@/types/user";
 import { useRouter } from "next/navigation";
@@ -24,11 +23,11 @@ export default function SignUpPage() {
         setError("Invalid email or password");
       }
     } catch (error) {
-      setError(
-        (error as ApiError).response?.data?.error ??
-          (error as ApiError).message ??
-          "Oops... some error",
-      );
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("Oops... some error");
+      }
     }
   };
 

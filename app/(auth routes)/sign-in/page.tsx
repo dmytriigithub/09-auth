@@ -5,7 +5,6 @@ import css from "./SignInPage.module.css";
 import { RegisterRequest } from "@/types/user";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { ApiError } from "@/app/api/api";
 import { useSessionStore } from "@/lib/store/authStore";
 
 export default function SignInPage() {
@@ -24,11 +23,11 @@ export default function SignInPage() {
         setError("Invalid email or password");
       }
     } catch (error) {
-      setError(
-        (error as ApiError).response?.data?.error ??
-          (error as ApiError).message ??
-          "Oops... some error",
-      );
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("Oops... some error");
+      }
     }
   };
 
