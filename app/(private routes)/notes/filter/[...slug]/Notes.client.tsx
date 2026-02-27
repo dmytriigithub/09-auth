@@ -3,7 +3,7 @@
 import css from "./page.module.css";
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { fetchNotes, NotesHTTPResponse } from "@/lib/api";
+import { fetchNotes, NotesHTTPResponse } from "@/lib/api/clientApi";
 import { useEffect, useState } from "react";
 
 import NoteList from "@/components/NoteList/NoteList";
@@ -40,7 +40,7 @@ const NoteClient = ({ filter }: NoteClientProps) => {
       setPage(1);
       setSearchQuery(e.target.value);
     },
-    300
+    300,
   );
 
   if (isLoading) return <p>Loading...</p>;

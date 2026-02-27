@@ -4,7 +4,7 @@ import { Note } from "@/types/note";
 import Link from "next/link";
 import css from "./NoteList.module.css";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteNote } from "@/lib/api";
+import { deleteNote } from "@/lib/api/clientApi";
 import toast from "react-hot-toast";
 
 interface NoteListProps {

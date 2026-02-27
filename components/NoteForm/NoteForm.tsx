@@ -3,7 +3,8 @@
 import css from "./NoteForm.module.css";
 import { useId } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createNote, NewNoteData } from "@/lib/api";
+import type { NoteInputValues } from "../../types/note";
+import { createNote } from "@/lib/api/clientApi";
 import { Note } from "@/types/note";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -16,7 +17,7 @@ export default function NoteForm() {
 
   const { draft, setDraft, clearDraft } = useNoteDraftStore();
 
-  const mutation = useMutation<Note, Error, NewNoteData>({
+  const mutation = useMutation<Note, Error, NoteInputValues>({
     mutationFn: createNote,
     onSuccess: () => {
       clearDraft();
@@ -30,7 +31,7 @@ export default function NoteForm() {
   const handleChange = (
     event: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    >,
   ) => {
     setDraft({
       ...draft,
@@ -41,7 +42,7 @@ export default function NoteForm() {
   const handleCancel = () => router.push("/notes/filter/All");
 
   const handleSubmit = (formData: FormData) => {
-    const values = Object.fromEntries(formData) as unknown as NewNoteData;
+    const values = Object.fromEntries(formData) as unknown as NoteInputValues;
 
     mutation.mutate(values);
   };
