@@ -3,7 +3,7 @@ import Image from "next/image";
 import css from "./EditPage.module.css";
 import { useSessionStore } from "@/lib/store/authStore";
 import { useRouter } from "next/navigation";
-import { changeName, getMe } from "@/lib/api/clientApi";
+import { updateMe, getMe } from "@/lib/api/clientApi";
 export default function EditPage() {
   const { user, setUser } = useSessionStore();
   const router = useRouter();
@@ -13,7 +13,7 @@ export default function EditPage() {
     const formData = new FormData(e.currentTarget);
     const username = formData.get("username");
     try {
-      await changeName(username as string, user?.email);
+      await updateMe(username as string);
     } catch {
       console.log("error");
       return;

@@ -1,18 +1,29 @@
-import { RegisterRequest, User } from "@/types/user";
 import { nextServer } from "./api";
 import { Note, NoteInputValues } from "@/types/note";
+import { User } from "@/types/user";
 
 export interface NotesHTTPResponse {
   notes: Note[];
   totalPages: number;
 }
 
+interface RegisterRequest {
+  email: string;
+  password: string;
+}
+
 export interface FetchParams {
   search?: string;
-  tag: string | undefined;
+  tag?: string;
   page: number;
   perPage: number;
 }
+
+interface CheckSessionResponse {
+  success: boolean;
+}
+
+/* ================= AUTH ================= */
 
 export const register = async (data: RegisterRequest) => {
   const res = await nextServer.post<User>("/auth/register", data);
@@ -28,38 +39,36 @@ export const logout = async (): Promise<void> => {
   await nextServer.post("/auth/logout");
 };
 
-export const getMe = async () => {
-  const { data } = await nextServer.get<User>("/users/me");
-  return data;
-};
-
-type CheckSessionRequest = {
-  success: boolean;
-};
-
 export const checkSession = async () => {
-  const res = await nextServer.get<CheckSessionRequest>("/auth/session");
+  const res = await nextServer.get<CheckSessionResponse>("/auth/session");
   return res.data.success;
 };
 
-export const changeName = async (username: string, email?: string) => {
-  const res = await nextServer.patch<CheckSessionRequest>("/users/me", {
-    email,
-    username,
-  });
+export const getMe = async () => {
+  const res = await nextServer.get<User>("/users/me");
   return res.data;
 };
+
+export const updateMe = async (username: string) => {
+  const res = await nextServer.patch<User>("/users/me", { username });
+  return res.data;
+};
+
+/* ================= NOTES ================= */
 
 export async function fetchNotes(
   searchText: string,
   page: number,
-  tag: string | undefined,
+  tag?: string,
 ): Promise<NotesHTTPResponse> {
   const params: FetchParams = {
     page,
-    tag,
     perPage: 12,
   };
+
+  if (tag) {
+    params.tag = tag;
+  }
 
   if (searchText.trim() !== "") {
     params.search = searchText.trim();
@@ -68,6 +77,12 @@ export async function fetchNotes(
   const res = await nextServer.get<NotesHTTPResponse>("/notes", {
     params,
   });
+
+  return res.data;
+}
+
+export async function fetchNoteById(id: string): Promise<Note> {
+  const res = await nextServer.get(`/notes/${id}`);
   return res.data;
 }
 
@@ -78,22 +93,5 @@ export async function createNote(note: NoteInputValues): Promise<Note> {
 
 export async function deleteNote(id: string): Promise<Note> {
   const res = await nextServer.delete(`/notes/${id}`);
-  return res.data;
-}
-
-export async function fetchNoteById(id: string): Promise<Note> {
-  const res = await nextServer.get(`/notes/${id}`);
-  return res.data;
-}
-
-export async function fetchNotesByTag(
-  tag?: string,
-): Promise<NotesHTTPResponse> {
-  const res = await nextServer.get(`/notes`, {
-    params: {
-      tag,
-      perPage: 12,
-    },
-  });
   return res.data;
 }

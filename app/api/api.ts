@@ -1,9 +1,8 @@
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError } from "axios";
 
-const isSSR = typeof window === "undefined";
-const baseURL = isSSR ? "https://notehub-api.goit.study" : "/api";
+const baseURL = process.env.NEXT_PUBLIC_API_URL + "/api";
 
-export type ApiError = AxiosError<{ error: string }>
+export type ApiError = AxiosError<{ error: string }>;
 
 export const api = axios.create({
   baseURL,

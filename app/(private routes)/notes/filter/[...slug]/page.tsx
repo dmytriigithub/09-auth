@@ -3,7 +3,7 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import { fetchNotes } from "@/lib/api/clientApi";
+import { fetchNotes } from "@/lib/api/serverApi";
 
 import NoteClient from "./Notes.client";
 import { Metadata } from "next";
@@ -48,8 +48,8 @@ const Notes = async ({ params }: NoteProps) => {
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: ["notes", filter],
-    queryFn: () => fetchNotes("", 1, filter),
+    queryKey: ["notes", "", filter, 1],
+    queryFn: () => fetchNotes("", filter, 1),
   });
 
   return (
